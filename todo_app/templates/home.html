@@ -1,0 +1,55 @@
+{% extends "bootstrap.html" %}
+
+{% block content %}
+<h2 class="mb-3">Your Tasks</h2>
+
+<a href="/add/" class="btn btn-primary mb-3">+ Add New Task</a>
+
+<div class="list-group">
+
+    {% for t in tasks %}
+    <div class="list-group-item d-flex justify-content-between align-items-center">
+
+        <div>
+            <!-- Task Title -->
+            {% if t.is_completed %}
+                <span class="text-success fw-bold"><s>{{ t.title }}</s></span>
+            {% else %}
+                <span class="fw-bold">{{ t.title }}</span>
+            {% endif %}
+
+            <!-- Description -->
+            <br>
+            <small class="text-muted">{{ t.description }}</small>
+
+            <!-- Created & Due Dates -->
+            <div class="text-muted mt-1">
+                Created: {{ t.created_at|date:"d M Y, h:i A" }} <br>
+                Due: {{ t.due_at|date:"d M Y" }}
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div>
+            {% if not t.is_completed %}
+                <a href="/complete/{{ t.id }}" class="btn btn-sm btn-success">Complete</a>
+            {% endif %}
+            <a href="/edit/{{ t.id }}" class="btn btn-sm btn-warning">Edit</a>
+            <a href="/delete/{{ t.id }}" class="btn btn-sm btn-danger">Delete</a>
+        </div>
+
+    </div>
+    {% empty %}
+    <p class="text-muted">No tasks added yet!</p>
+    {% endfor %}
+<div>
+  <form action="{% url 'logout' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button class="btn btn-danger">Logout</button>
+</form>
+
+
+</div>
+</div>
+
+{% endblock %}
